@@ -1,6 +1,8 @@
 package io.github.bvilii.yapper.server.ui;
 
+import java.io.IOException;
+
 public interface ServerListener {
     void onServerStart();
-    void onServerStartError(Exception e);
+    void onServerStartError(IOException e);
 }

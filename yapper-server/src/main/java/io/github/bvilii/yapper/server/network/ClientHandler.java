@@ -1,42 +1,44 @@
 package io.github.bvilii.yapper.server.network;
 
-import com.google.gson.Gson;
 import io.github.bvilii.yapper.server.model.Message;
-import io.github.bvilii.yapper.server.ui.ClientHandlerListener;
+import io.github.bvilii.yapper.server.service.MessageListener;
+import io.github.bvilii.yapper.server.ui.ClientLifecycleListener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
-    private ClientHandlerListener listener;
-    private Gson gson;
+    private final ClientSession session;
+    private final ClientLifecycleListener clientLifecycleListener;
+    private final MessageListener messageListener;
 
-    public ClientHandler(Socket clientSocket, ClientHandlerListener listener) {
-        this.clientSocket = clientSocket;
-        this.listener = listener;
-        this.gson = new Gson();
+    public ClientHandler(ClientSession session , ClientLifecycleListener clientLifecycleListener,
+                         MessageListener messageListener) {
+
+        this.session = session;
+        this.clientLifecycleListener = clientLifecycleListener;
+        this.messageListener = messageListener;
     }
 
 
     @Override
     public void run() {
-        try (BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+        try {
 
-            listener.onClientConnected();
+            clientLifecycleListener.onClientConnected(session);
 
-            String message;
-            while ((message = inputFromClient.readLine()) != null) {
-                Message msg = gson.fromJson(message, Message.class);
+            Message message;
+            while ((message = session.receiveMessage()) != null) {
+
+                messageListener.onMessageReceived(session, message);
 
             }
 
+            clientLifecycleListener.onClientDisconnected(session);
+
         } catch (IOException e) {
-            listener.onClientConnectionError(e);
+
+            clientLifecycleListener.onClientConnectionError(session, e);
         }
-
-
     }
+
 }

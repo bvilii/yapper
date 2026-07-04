@@ -5,6 +5,8 @@ public class Message {
     private String sender;
     private MessageType type;
 
+    public Message(){}
+
     public Message(String content, String sender, MessageType type) {
         this.content = content;
         this.sender = sender;
