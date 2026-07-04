@@ -1,5 +1,8 @@
 package io.github.bvilii.yapper.server.model;
 
 public enum MessageType {
-    CHAT
+    JOIN,
+    CHAT,
+    JOIN_ERROR,
+    JOIN_SUCCESS
 }
