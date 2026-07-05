@@ -12,6 +12,11 @@ public class BroadcastService {
     }
 
     public void broadcast(ClientSession sender, Message message) {
+
+        if(!sender.isAuthenticated()){
+            return;
+        }
+
         Message outgoingMessage = new Message(message.getContent(), sender.getUsername(), MessageType.CHAT);
 
         for (ClientSession session : registry.getSessions()) {

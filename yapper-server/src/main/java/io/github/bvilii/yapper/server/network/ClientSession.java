@@ -37,4 +37,8 @@ public class ClientSession {
     public String getUsername() {
         return username;
     }
+
+    public boolean isAuthenticated() {
+        return username != null;
+    }
 }
