@@ -61,7 +61,7 @@ public class Main {
                 }
 
             } catch (InterruptedException | ExecutionException e) {
-                System.out.println("Error while attempting to login. Error message: " + e.getMessage());
+                System.out.println("Error while at  tempting to login. Error message: " + e.getMessage());
                 return;
             }
 
