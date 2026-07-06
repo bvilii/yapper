@@ -1,7 +1,7 @@
 package io.github.bvilii.yapper.server.service;
 
-import io.github.bvilii.yapper.server.model.Message;
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.shared.model.Message;
 
 public class ChatService implements MessageListener {
     private final ClientRegistry registry;

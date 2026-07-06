@@ -1,4 +1,5 @@
-package io.github.bvilii.yapper.server.model;
+package io.github.bvilii.yapper.shared.model;
+
 
 public class Message {
     private String content;

@@ -11,6 +11,7 @@
     <modules>
         <module>yapper-server</module>
         <module>yapper-client</module>
+        <module>yapper-shared</module>
     </modules>
 
     <properties>

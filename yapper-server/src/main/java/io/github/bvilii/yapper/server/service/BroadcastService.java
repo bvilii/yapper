@@ -1,8 +1,9 @@
 package io.github.bvilii.yapper.server.service;
 
-import io.github.bvilii.yapper.server.model.Message;
-import io.github.bvilii.yapper.server.model.MessageType;
+
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.shared.model.Message;
+import io.github.bvilii.yapper.shared.model.MessageType;
 
 public class BroadcastService {
     private final ClientRegistry registry;

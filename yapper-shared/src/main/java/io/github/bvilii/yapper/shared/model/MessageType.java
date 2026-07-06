@@ -1,4 +1,4 @@
-package io.github.bvilii.yapper.server.model;
+package io.github.bvilii.yapper.shared.model;
 
 public enum MessageType {
     JOIN,

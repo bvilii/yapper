@@ -1,8 +1,8 @@
 package io.github.bvilii.yapper.server.service;
 
-import io.github.bvilii.yapper.server.model.Message;
-import io.github.bvilii.yapper.server.model.MessageType;
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.shared.model.Message;
+import io.github.bvilii.yapper.shared.model.MessageType;
 
 public class LoginService {
     private final ClientRegistry registry;
@@ -21,6 +21,6 @@ public class LoginService {
 
         session.setUsername(username);
         registry.addSession(username, session);
-        session.sendMessage(new Message("", "server", MessageType.JOIN_SUCCESS));
+        session.sendMessage(new Message(username, "server", MessageType.JOIN_SUCCESS));
     }
 }

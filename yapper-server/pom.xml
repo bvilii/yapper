@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.bvilii</groupId>
+            <artifactId>yapper-shared</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.11.0</version>

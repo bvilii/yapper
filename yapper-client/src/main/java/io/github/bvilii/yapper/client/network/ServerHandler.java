@@ -1,0 +1,32 @@
+package io.github.bvilii.yapper.client.network;
+
+
+import io.github.bvilii.yapper.client.service.ChatService;
+import io.github.bvilii.yapper.shared.model.Message;
+
+import java.io.IOException;
+
+public class ServerHandler implements Runnable {
+    private final ServerSession session;
+    private final ChatService service;
+
+    public ServerHandler(ServerSession session, ChatService service) {
+        this.session = session;
+        this.service = service;
+    }
+
+    @Override
+    public void run() {
+        try{
+            Message message;
+            while((message = session.receiveMessage()) != null){
+                service.onMessageFromServer(message);
+            }
+
+        } catch (IOException e) {
+            //todo
+        }
+    }
+
+
+}

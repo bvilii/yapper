@@ -1,8 +1,9 @@
 package io.github.bvilii.yapper.server.network;
 
-import io.github.bvilii.yapper.server.model.Message;
+
 import io.github.bvilii.yapper.server.service.MessageListener;
 import io.github.bvilii.yapper.server.ui.ClientLifecycleListener;
+import io.github.bvilii.yapper.shared.model.Message;
 
 import java.io.IOException;
 

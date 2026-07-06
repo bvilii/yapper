@@ -37,7 +37,6 @@ public class ServerUI implements ServerListener, ClientLifecycleListener{
         display("Server starting ran into an error! Error: " + e.getMessage());
     }
 
-
     public void display(String message){
         System.out.println(message);
     }
