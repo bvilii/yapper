@@ -1,0 +1,73 @@
+name: Build Cross-Platform Clients
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # 1. WINDOWS APP BUILD
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build project with Maven
+        run: mvn clean package
+
+      - name: Package Windows EXE
+        run: |
+          jpackage `
+            --type app-image `
+            --input yapper-client/target `
+            --dest yapper-client/dist `
+            --name Yapper `
+            --main-jar yapper-client-1.0-SNAPSHOT.jar `
+            --main-class io.github.bvilii.yapper.client.app.Main `
+            --win-console
+
+      - name: Upload Windows App Zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: Yapper-Windows-Client
+          path: yapper-client/dist/Yapper/
+
+  # 2. MAC APP BUILD
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build project with Maven
+        run: mvn clean package
+
+      - name: Package Mac App Image
+        run: |
+          jpackage \
+            --type app-image \
+            --input yapper-client/target \
+            --dest yapper-client/dist \
+            --name YapperClient \
+            --main-jar yapper-client-1.0-SNAPSHOT.jar \
+            --main-class io.github.bvilii.yapper.client.app.Main
+
+      - name: Upload Mac App Zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: Yapper-Mac-Client
+          path: yapper-client/dist/YapperClient.app/
