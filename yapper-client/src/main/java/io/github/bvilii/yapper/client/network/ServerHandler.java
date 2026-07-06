@@ -24,7 +24,8 @@ public class ServerHandler implements Runnable {
             }
 
         } catch (IOException e) {
-            //todo
+            service.onConnectionLost();
+            System.exit(1);
         }
     }
 

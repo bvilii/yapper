@@ -36,4 +36,8 @@ public class ChatService {
             }
         }
     }
+
+    public void onConnectionLost() {
+        display.displayInfo("Lost connection to server. Exiting...");
+    }
 }

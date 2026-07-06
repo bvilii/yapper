@@ -4,4 +4,8 @@ public class ClientDisplay {
     public void displayChatMessage(String sender, String content) {
         System.out.println("<" + sender + "> " + content);
     }
+
+    public void displayInfo(String info) {
+        System.out.println("[" + info + "]");
+    }
 }
