@@ -5,4 +5,6 @@ import io.github.bvilii.yapper.shared.model.Message;
 
 public interface MessageListener {
     void onMessageReceived(ClientSession session, Message message);
+
+    void onClientDisconnected(ClientSession session);
 }

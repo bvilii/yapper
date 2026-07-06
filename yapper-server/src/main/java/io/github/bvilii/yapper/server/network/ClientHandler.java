@@ -35,9 +35,10 @@ public class ClientHandler implements Runnable {
             }
 
             clientLifecycleListener.onClientDisconnected(session);
+            messageListener.onClientDisconnected(session);
 
         } catch (IOException e) {
-
+            messageListener.onClientDisconnected(session);
             clientLifecycleListener.onClientConnectionError(session, e);
         }
     }

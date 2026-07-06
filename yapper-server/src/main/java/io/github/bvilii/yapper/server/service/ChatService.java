@@ -34,4 +34,9 @@ public class ChatService implements MessageListener {
             }
         }
     }
+
+    @Override
+    public void onClientDisconnected(ClientSession session) {
+        registry.removeSession(session.getUsername());
+    }
 }

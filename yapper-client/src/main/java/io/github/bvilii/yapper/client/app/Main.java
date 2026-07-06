@@ -15,11 +15,21 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("ENTER HOST:");
+        String host = scanner.nextLine();
+
+        System.out.println("ENTER PORT:");
+        int port = Integer.parseInt(scanner.nextLine());
+
+
         ClientDisplay display = new ClientDisplay();
 
         ServerConnection connection;
         try {
-            connection = ServerConnection.connect("7.tcp.eu.ngrok.io", 20039);
+            connection = ServerConnection.connect(host, port);
 
         } catch (IOException e) {
             System.out.println("Could not connect to server");
@@ -35,10 +45,10 @@ public class Main {
         Thread serverThread = new Thread(handler);
         serverThread.start();
 
-        Scanner scanner = new Scanner(System.in);
+
         System.out.println("WELCOME TO YAPPER");
 
-        boolean success = false;
+        boolean success;
         do {
             System.out.println("PLEASE ENTER A USERNAME:");
             String username = scanner.nextLine();
@@ -50,10 +60,7 @@ public class Main {
                     System.out.println("LOGIN SUCCESSFUL!");
                 }
 
-            } catch (InterruptedException e) {
-                System.out.println("Error while attempting to login. Error message: " + e.getMessage());
-                return;
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 System.out.println("Error while attempting to login. Error message: " + e.getMessage());
                 return;
             }
