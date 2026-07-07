@@ -59,7 +59,7 @@ jobs:
       - name: Package Mac App Image
         run: |
           jpackage \
-            --type app-image \
+            --type dmg \
             --input yapper-client/target \
             --dest yapper-client/dist \
             --name YapperClient \
@@ -70,4 +70,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Yapper-Mac-Client
-          path: yapper-client/dist/YapperClient.app/
+          path: yapper-client/dist/YapperClient-1.0.dmg
