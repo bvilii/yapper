@@ -10,27 +10,9 @@ import io.github.bvilii.yapper.server.ui.ServerListener;
 import io.github.bvilii.yapper.server.ui.ServerUI;
 import io.github.bvilii.yapper.server.service.MessageListener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
-
-        int port;
-
-        Properties config  = new Properties();
-        try(InputStream in = Main.class.getClassLoader().getResourceAsStream("config.properties")) {
-            config.load(in);
-
-        } catch (IOException e) {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter port:");
-            port = Integer.parseInt(scanner.nextLine());
-        }
-
-        port = Integer.parseInt(config.getProperty("server.port"));
+        int port = 5000;
 
         ClientRegistry registry = new ClientRegistry();
         BroadcastService broadcastService = new BroadcastService(registry);
