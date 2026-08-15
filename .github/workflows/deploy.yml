@@ -18,26 +18,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to Cloud VM via SSH
+      # 1. Copy repository files directly from GitHub runner to the VM
+      - name: Copy files to Cloud VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: "~/yapper"
+          overwrite: true
+
+      # 2. Run Docker on the VM with the transferred files
+      - name: Start Docker Containers
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            mkdir -p ~/yapper
+            set -e
             cd ~/yapper
 
-            
-            if [ ! -d ".git" ]; then
-              git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
-            else
-              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-              git fetch origin master
-              git reset --hard origin/master
-            fi
-
-            
+            # Generate .env if missing
             if [ ! -f ".env" ]; then
               echo "MYSQL_ROOT_PASSWORD=$(openssl rand -hex 16)" > .env
               echo "MYSQL_DATABASE=yapper_db" >> .env
@@ -45,6 +48,6 @@ jobs:
               echo "MYSQL_PASSWORD=$(openssl rand -hex 16)" >> .env
             fi
 
-            
+            # Build and boot containers
             docker compose down
             docker compose up -d --build
