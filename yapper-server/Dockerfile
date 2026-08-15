@@ -18,7 +18,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy the built jar from the build stage
-COPY --from=build /app/yapper-server/target/*.jar app.jar
+COPY --from=build /app/yapper-server/target/*-dependencies.jar app.jar
 
 EXPOSE 5000
 
