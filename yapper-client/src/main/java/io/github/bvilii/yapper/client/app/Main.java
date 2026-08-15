@@ -16,20 +16,11 @@ import java.util.concurrent.ExecutionException;
 public class Main {
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("ENTER HOST:");
-        String host = scanner.nextLine();
-
-        System.out.println("ENTER PORT:");
-        int port = Integer.parseInt(scanner.nextLine());
-
-
         ClientDisplay display = new ClientDisplay();
 
         ServerConnection connection;
         try {
-            connection = ServerConnection.connect(host, port);
+            connection = ServerConnection.connect("158.180.21.246", 5000);
 
         } catch (IOException e) {
             System.out.println("Could not connect to server");
@@ -48,6 +39,7 @@ public class Main {
 
         System.out.println("WELCOME TO YAPPER");
 
+        Scanner scanner = new Scanner(System.in);
         boolean success;
         do {
             System.out.println("PLEASE ENTER A USERNAME:");
