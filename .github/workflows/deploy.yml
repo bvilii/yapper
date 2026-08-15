@@ -18,18 +18,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. Copy repository files directly from GitHub runner to the VM
+      # 1. Automatically wipe old files and copy fresh source files
       - name: Copy files to Cloud VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "."
-          target: "~/yapper"
-          overwrite: true
+          rm: true
+          source: "yapper-server/**,yapper-shared/**,docker-compose.yml,pom.xml"
+          target: "/home/ubuntu/yapper"
 
-      # 2. Run Docker on the VM with the transferred files
+      # 2. Start Docker containers
       - name: Start Docker Containers
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -38,7 +38,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
-            cd ~/yapper
+            cd /home/ubuntu/yapper
 
             # Generate .env if missing
             if [ ! -f ".env" ]; then
@@ -48,6 +48,6 @@ jobs:
               echo "MYSQL_PASSWORD=$(openssl rand -hex 16)" >> .env
             fi
 
-            # Build and boot containers
+            # Build and start services
             docker compose down
             docker compose up -d --build
