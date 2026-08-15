@@ -30,9 +30,11 @@ public class ChatService {
             }
             case JOIN_ERROR: {
                 loginService.onLoginError();
+                break;
             }
             case JOIN_SUCCESS: {
                 loginService.onLoginSuccess(message.getContent());
+                break;
             }
         }
     }

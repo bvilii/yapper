@@ -3,6 +3,11 @@ name: Build Cross-Platform Clients
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'yapper-client/**'
+      - 'yapper-shared/**'
+      - '.github/workflows/build-apps.yml'
+  workflow_dispatch:
 
 jobs:
   # 1. WINDOWS APP BUILD
@@ -20,9 +25,9 @@ jobs:
           cache: maven
 
       - name: Build project with Maven
-        run: mvn clean package
+        run: mvn clean package -pl yapper-client -am
 
-      - name: Package Windows EXE
+      - name: Package Windows App
         run: |
           jpackage `
             --type app-image `
@@ -31,6 +36,7 @@ jobs:
             --name Yapper `
             --main-jar yapper-client-1.0-SNAPSHOT.jar `
             --main-class io.github.bvilii.yapper.client.app.Main `
+            --app-version 1.0.0 `
             --win-console
 
       - name: Upload Windows App Zip
@@ -39,7 +45,7 @@ jobs:
           name: Yapper-Windows-Client
           path: yapper-client/dist/Yapper/
 
-  # 2. MAC APP BUILD
+  # 2. MACOS DMG BUILD
   build-mac:
     runs-on: macos-latest
     steps:
@@ -54,20 +60,21 @@ jobs:
           cache: maven
 
       - name: Build project with Maven
-        run: mvn clean package
+        run: mvn clean package -pl yapper-client -am
 
-      - name: Package Mac App Image
+      - name: Package macOS DMG
         run: |
           jpackage \
             --type dmg \
             --input yapper-client/target \
             --dest yapper-client/dist \
-            --name YapperClient \
+            --name "Yapper" \
             --main-jar yapper-client-1.0-SNAPSHOT.jar \
-            --main-class io.github.bvilii.yapper.client.app.Main
+            --main-class io.github.bvilii.yapper.client.app.Main \
+            --app-version 1.0.0
 
-      - name: Upload Mac App Zip
+      - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
         with:
-          name: Yapper-Mac-Client
-          path: yapper-client/dist/YapperClient-1.0.dmg
+          name: Yapper-Mac-DMG
+          path: yapper-client/dist/*.dmg

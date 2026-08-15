@@ -1,0 +1,50 @@
+name: Deploy Yapper to Oracle Cloud
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'yapper-server/**'
+      - 'yapper-shared/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Cloud VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            
+            mkdir -p ~/yapper
+            cd ~/yapper
+
+            
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/${{ github.repository }}.git .
+            else
+              git fetch origin master
+              git reset --hard origin/master
+            fi
+
+            
+            if [ ! -f ".env" ]; then
+              echo "MYSQL_ROOT_PASSWORD=$(openssl rand -hex 16)" > .env
+              echo "MYSQL_DATABASE=yapper_db" >> .env
+              echo "MYSQL_USER=yapper_user" >> .env
+              echo "MYSQL_PASSWORD=$(openssl rand -hex 16)" >> .env
+            fi
+
+            
+            docker compose down
+            docker compose up -d --build

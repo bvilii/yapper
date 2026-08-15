@@ -18,15 +18,19 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
+        int port;
+
         Properties config  = new Properties();
         try(InputStream in = Main.class.getClassLoader().getResourceAsStream("config.properties")) {
             config.load(in);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter port:");
+            port = Integer.parseInt(scanner.nextLine());
         }
 
-        int port = Integer.parseInt(config.getProperty("server.port"));
+        port = Integer.parseInt(config.getProperty("server.port"));
 
         ClientRegistry registry = new ClientRegistry();
         BroadcastService broadcastService = new BroadcastService(registry);
