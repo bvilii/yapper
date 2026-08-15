@@ -10,27 +10,39 @@ on:
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. Automatically wipe old files and copy fresh source files
-      - name: Copy files to Cloud VM
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          rm: true
-          source: "yapper-server/**,yapper-shared/**,docker-compose.yml,pom.xml"
-          target: "/home/ubuntu/yapper"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # 2. Start Docker containers
-      - name: Start Docker Containers
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 1. Build and push the server container image on GitHub's fast runners
+      - name: Build and push Server image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./yapper-server/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/yapper-server:latest
+
+      # 2. Deploy directly to the VM via SSH without copying source code
+      - name: Deploy to Cloud VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -38,9 +50,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
+            mkdir -p /home/ubuntu/yapper
             cd /home/ubuntu/yapper
 
-            # Generate .env if missing
+            # Generate persistent .env if missing
             if [ ! -f ".env" ]; then
               echo "MYSQL_ROOT_PASSWORD=$(openssl rand -hex 16)" > .env
               echo "MYSQL_DATABASE=yapper_db" >> .env
@@ -48,6 +61,50 @@ jobs:
               echo "MYSQL_PASSWORD=$(openssl rand -hex 16)" >> .env
             fi
 
-            # Build and start services
+            # Write docker-compose.yml directly on the VM
+            cat << 'EOF' > docker-compose.yml
+            version: '3.8'
+
+            services:
+              db:
+                image: mysql:8.0
+                container_name: yapper_mysql
+                restart: always
+                environment:
+                  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+                  MYSQL_DATABASE: ${MYSQL_DATABASE}
+                  MYSQL_USER: ${MYSQL_USER}
+                  MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+                volumes:
+                  - db_data:/var/lib/mysql
+                healthcheck:
+                  test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 5
+
+              server:
+                image: ghcr.io/${{ github.repository_owner }}/yapper-server:latest
+                container_name: yapper_server
+                restart: always
+                ports:
+                  - "5000:5000"
+                environment:
+                  DB_HOST: db
+                  DB_PORT: 3306
+                  DB_NAME: ${MYSQL_DATABASE}
+                  DB_USER: ${MYSQL_USER}
+                  DB_PASSWORD: ${MYSQL_PASSWORD}
+                depends_on:
+                  db:
+                    condition: service_healthy
+
+            volumes:
+              db_data:
+            EOF
+
+            # Pull fresh image and run
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose down
-            docker compose up -d --build
+            docker compose pull
+            docker compose up -d
