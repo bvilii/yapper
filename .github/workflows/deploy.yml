@@ -6,7 +6,7 @@ on:
     paths:
       - 'yapper-server/**'
       - 'yapper-shared/**'
-      - 'docker-compose.yml'
+      - 'yapper-compose.yml'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -39,9 +39,9 @@ jobs:
           context: .
           file: ./yapper-server/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/yapper-server:latest
+          tags: ghcr.io/bvilii/yapper-server:latest
 
-      # 2. Deploy directly to the VM via SSH without copying source code
+      # 2. Deploy to the VM via SSH — old container gets replaced, DB volume persists
       - name: Deploy to Cloud VM
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -53,7 +53,8 @@ jobs:
             mkdir -p /home/ubuntu/yapper
             cd /home/ubuntu/yapper
 
-            # Generate persistent .env if missing
+            # Generate .env ONLY the first time — never overwritten again,
+            # so the database credentials (and the database itself) survive every future deploy
             if [ ! -f ".env" ]; then
               echo "MYSQL_ROOT_PASSWORD=$(openssl rand -hex 16)" > .env
               echo "MYSQL_DATABASE=yapper_db" >> .env
@@ -61,15 +62,15 @@ jobs:
               echo "MYSQL_PASSWORD=$(openssl rand -hex 16)" >> .env
             fi
 
-            # Write docker-compose.yml directly on the VM
+            # Write docker-compose.yml fresh every deploy — this is just structure, not secrets
             cat << 'EOF' > docker-compose.yml
-            version: '3.8'
-
             services:
               db:
                 image: mysql:8.0
                 container_name: yapper_mysql
                 restart: always
+                ports:
+                  - "127.0.0.1:3306:3306"
                 environment:
                   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
                   MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -84,7 +85,7 @@ jobs:
                   retries: 5
 
               server:
-                image: ghcr.io/${{ github.repository_owner }}/yapper-server:latest
+                image: ghcr.io/bvilii/yapper-server:latest
                 container_name: yapper_server
                 restart: always
                 ports:
@@ -103,7 +104,7 @@ jobs:
               db_data:
             EOF
 
-            # Pull fresh image and run
+            # Pull the new image and replace the old container — db_data volume is untouched
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose down
             docker compose pull

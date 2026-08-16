@@ -1,26 +1,7 @@
-version: '3.8'
-
 services:
-  yapper-server:
-    build:
-      context: .
-      dockerfile: yapper-server/Dockerfile
-    container_name: yapper-server
-    restart: always
-    ports:
-      - "5000:5000"
-    environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_NAME=${MYSQL_DATABASE}
-      - DB_USER=${MYSQL_USER}
-      - DB_PASSWORD=${MYSQL_PASSWORD}
-    depends_on:
-      - db
-
   db:
     image: mysql:8.0
-    container_name: yapper-db
+    container_name: yapper_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -29,6 +10,27 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    image: ghcr.io/bvilii/yapper-server:latest
+    container_name: yapper_server
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
