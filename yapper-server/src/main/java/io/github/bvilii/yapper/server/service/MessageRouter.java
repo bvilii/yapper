@@ -1,6 +1,7 @@
 package io.github.bvilii.yapper.server.service;
 
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.shared.model.message.LoginRequestMessage;
 import io.github.bvilii.yapper.shared.model.message.Message;
 import io.github.bvilii.yapper.shared.model.message.RegisterRequestMessage;
 
@@ -27,7 +28,7 @@ public class MessageRouter implements MessageListener {
             }
 
             case LOGIN: {
-                loginService.handleLogin(session, message);
+                loginService.handleLogin(session, (LoginRequestMessage) message);
                 break;
             }
 

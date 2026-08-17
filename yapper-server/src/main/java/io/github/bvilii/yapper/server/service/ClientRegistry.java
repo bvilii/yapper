@@ -21,7 +21,7 @@ public class ClientRegistry {
         sessions.remove(username);
     }
 
-    public boolean isUsernameTaken(String username) {
+    public boolean isUserOnline(String username) {
         return sessions.containsKey(username);
     }
 

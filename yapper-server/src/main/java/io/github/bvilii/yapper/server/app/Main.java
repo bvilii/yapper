@@ -18,7 +18,7 @@ public class Main {
         ClientRegistry registry = new ClientRegistry();
 
         BroadcastService broadcastService = new BroadcastService(registry);
-        LoginService loginService = new LoginService(registry);
+        LoginService loginService = new LoginService(registry, userRepository);
         RegisterService registerService = new RegisterService(userRepository, registry);
         MessageListener messageListener = new MessageRouter(registry, loginService, broadcastService, registerService);
 

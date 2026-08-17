@@ -29,5 +29,16 @@ public class UserRepository {
         );
     }
 
+    public boolean verifyPassword(String username, String password) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT 1 FROM users WHERE username = :u AND password = :p")
+                        .bind("u", username)
+                        .bind("p", password)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .isPresent()
+        );
+    }
+
 
 }
