@@ -9,12 +9,11 @@ public class UserRepository {
         this.jdbi = jdbi;
     }
 
-    public boolean saveUser(String username, String password, String password_hash) {
+    public boolean saveUser(String username, String password) {
         int rows = jdbi.withHandle(handle ->
-                handle.createUpdate("INSERT INTO users (username, password, password_hash) VALUES (:u, :p, :p_h)")
+                handle.createUpdate("INSERT INTO users (username, password) VALUES (:u, :p)")
                         .bind("u", username)
                         .bind("p", password)
-                        .bind("p_h", password_hash)
                         .execute()
         );
         return rows > 0;

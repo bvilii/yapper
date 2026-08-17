@@ -11,7 +11,7 @@ public class LoginService {
         this.registry = registry;
     }
 
-    public void handleJoin(ClientSession session, Message message) {
+    public void handleLogin(ClientSession session, Message message) {
         String username = message.getSender();
 
         if(registry.isUsernameTaken(username)) {
