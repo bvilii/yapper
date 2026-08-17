@@ -28,11 +28,11 @@ public class ChatService {
                 display.displayChatMessage(message.getSender(), message.getContent());
                 break;
             }
-            case JOIN_ERROR: {
+            case LOGIN_ERROR: {
                 loginService.onLoginError();
                 break;
             }
-            case JOIN_SUCCESS: {
+            case LOGIN_SUCCESS: {
                 loginService.onLoginSuccess(message.getContent());
                 break;
             }

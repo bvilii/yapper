@@ -16,7 +16,7 @@ public class LoginService {
 
     public CompletableFuture<Boolean> attemptLogin(String username) {
         loginResult = new  CompletableFuture<>();
-        session.sendMessage(new Message("", username, MessageType.JOIN));
+        session.sendMessage(new Message("", username, MessageType.LOGIN));
         return loginResult;
     }
 

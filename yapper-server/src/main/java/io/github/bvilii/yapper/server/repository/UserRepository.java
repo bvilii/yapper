@@ -3,7 +3,7 @@ package io.github.bvilii.yapper.server.repository;
 import org.jdbi.v3.core.Jdbi;
 
 public class UserRepository {
-    private Jdbi jdbi;
+    private final Jdbi jdbi;
 
     public UserRepository(Jdbi jdbi) {
         this.jdbi = jdbi;

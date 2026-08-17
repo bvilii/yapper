@@ -15,12 +15,12 @@ public class LoginService {
         String username = message.getSender();
 
         if(registry.isUsernameTaken(username)) {
-            session.sendMessage(new Message("Username already taken", "server", MessageType.JOIN_ERROR));
+            session.sendMessage(new Message("Username already taken", "server", MessageType.LOGIN_ERROR));
             return;
         }
 
         session.setUsername(username);
         registry.addSession(username, session);
-        session.sendMessage(new Message(username, "server", MessageType.JOIN_SUCCESS));
+        session.sendMessage(new Message(username, "server", MessageType.LOGIN_SUCCESS));
     }
 }

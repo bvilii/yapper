@@ -18,7 +18,7 @@ public class MessageRouter implements MessageListener {
     public void onMessageReceived(ClientSession session, Message message) {
         switch (message.getType()) {
 
-            case JOIN: {
+            case LOGIN: {
                 loginService.handleJoin(session, message);
                 break;
             }

@@ -1,8 +1,17 @@
 package io.github.bvilii.yapper.shared.model;
 
 public enum MessageType {
-    JOIN,
-    CHAT,
-    JOIN_ERROR,
-    JOIN_SUCCESS
+    REGISTER,
+    REGISTER_SUCCESS,
+    REGISTER_ERROR,
+
+    LOGIN,
+    LOGIN_SUCCESS,
+    LOGIN_ERROR,
+
+    AUTO_LOGIN,
+    AUTO_LOGIN_SUCCESS,
+    AUTO_LOGIN_ERROR,
+
+    CHAT
 }
