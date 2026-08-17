@@ -25,7 +25,7 @@ public class ClientRegistry {
         return sessions.containsKey(username);
     }
 
-    public Collection<ClientSession> getSessions() {
+    public Collection<ClientSession> getAllSessions() {
         return List.copyOf(sessions.values());
     }
 }

@@ -1,6 +1,7 @@
 package io.github.bvilii.yapper.server.service;
 
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.shared.model.message.ChatMessage;
 import io.github.bvilii.yapper.shared.model.message.LoginRequestMessage;
 import io.github.bvilii.yapper.shared.model.message.Message;
 import io.github.bvilii.yapper.shared.model.message.RegisterRequestMessage;
@@ -33,7 +34,7 @@ public class MessageRouter implements MessageListener {
             }
 
             case CHAT: {
-                broadcastService.broadcast(session, message);
+                broadcastService.broadcast(session, (ChatMessage) message);
                 break;
             }
 

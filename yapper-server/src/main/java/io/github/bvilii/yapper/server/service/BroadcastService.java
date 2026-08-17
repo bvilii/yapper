@@ -2,8 +2,7 @@ package io.github.bvilii.yapper.server.service;
 
 
 import io.github.bvilii.yapper.server.network.ClientSession;
-import io.github.bvilii.yapper.shared.model.message.Message;
-import io.github.bvilii.yapper.shared.model.message.MessageType;
+import io.github.bvilii.yapper.shared.model.message.ChatMessage;
 
 public class BroadcastService {
     private final ClientRegistry registry;
@@ -12,15 +11,16 @@ public class BroadcastService {
         this.registry = registry;
     }
 
-    public void broadcast(ClientSession sender, Message message) {
+    public void broadcast(ClientSession sender, ChatMessage message) {
 
         if(!sender.isAuthenticated()){
+            sender.sendMessage(new ChatMessage("System", "You are not authenticated!"));
             return;
         }
 
-        Message outgoingMessage = new Message(message.getContent(), sender.getUsername(), MessageType.CHAT);
+        ChatMessage outgoingMessage = new ChatMessage(sender.getUsername(), message.getContent());
 
-        for (ClientSession session : registry.getSessions()) {
+        for (ClientSession session : registry.getAllSessions()) {
             if (session != sender) {
                 session.sendMessage(outgoingMessage);
             }
