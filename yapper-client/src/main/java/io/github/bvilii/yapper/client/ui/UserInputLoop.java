@@ -1,23 +1,23 @@
 package io.github.bvilii.yapper.client.ui;
 
-import io.github.bvilii.yapper.client.service.ChatService;
+import io.github.bvilii.yapper.client.service.MessageRouter;
 
 import java.util.Scanner;
 
 public class UserInputLoop {
     private final Scanner scanner;
-    private final ChatService chatService;
+    private final MessageRouter messageRouter;
 
-    public UserInputLoop(Scanner scanner, ChatService chatService) {
+    public UserInputLoop(Scanner scanner, MessageRouter messageRouter) {
         this.scanner = scanner;
-        this.chatService = chatService;
+        this.messageRouter = messageRouter;
     }
 
     public void start() {
         while (true) {
 
             String line = scanner.nextLine();
-            chatService.onUserInput(line);
+            messageRouter.onUserInput(line);
         }
     }
 

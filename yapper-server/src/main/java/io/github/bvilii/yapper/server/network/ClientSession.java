@@ -1,6 +1,7 @@
 package io.github.bvilii.yapper.server.network;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bvilii.yapper.shared.model.message.Message;
 
 
@@ -9,16 +10,19 @@ import java.io.IOException;
 public class ClientSession {
     private String username;
     private final ClientConnection connection;
-    private final Gson gson;
+    private final ObjectMapper mapper = new ObjectMapper();
 
 
     public ClientSession(ClientConnection connection) {
         this.connection = connection;
-        this.gson = new  Gson();
     }
 
     public void sendMessage(Message message) {
-        connection.sendLine(gson.toJson(message));
+        try {
+            connection.sendLine(mapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Message receiveMessage() throws IOException {
@@ -28,7 +32,7 @@ public class ClientSession {
             return null;
         }
 
-        return gson.fromJson(line, Message.class);
+        return mapper.readValue(line, Message.class);
     }
 
     public void setUsername(String username) {

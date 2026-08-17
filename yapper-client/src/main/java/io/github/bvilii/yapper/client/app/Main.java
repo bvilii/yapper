@@ -4,7 +4,7 @@ package io.github.bvilii.yapper.client.app;
 import io.github.bvilii.yapper.client.network.ServerConnection;
 import io.github.bvilii.yapper.client.network.ServerHandler;
 import io.github.bvilii.yapper.client.network.ServerSession;
-import io.github.bvilii.yapper.client.service.ChatService;
+import io.github.bvilii.yapper.client.service.MessageRouter;
 import io.github.bvilii.yapper.client.service.LoginService;
 import io.github.bvilii.yapper.client.service.RegisterService;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
@@ -21,7 +21,7 @@ public class Main {
 
         ServerConnection connection;
         try {
-            connection = ServerConnection.connect("158.180.21.246", 5000);
+            connection = ServerConnection.connect("localhost", 5000);
 
         } catch (IOException e) {
             System.out.println("Could not connect to server");
@@ -32,7 +32,7 @@ public class Main {
 
         LoginService loginService = new LoginService(session);
         RegisterService registerService = new RegisterService(session);
-        ChatService service = new ChatService(session, display, loginService, registerService);
+        MessageRouter service = new MessageRouter(session, display, loginService, registerService);
 
         ServerHandler handler = new ServerHandler(session, service);
         Thread serverThread = new Thread(handler);

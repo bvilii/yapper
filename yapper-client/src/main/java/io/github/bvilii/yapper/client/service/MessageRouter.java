@@ -5,15 +5,14 @@ import io.github.bvilii.yapper.client.ui.ClientDisplay;
 import io.github.bvilii.yapper.shared.model.message.ChatMessage;
 import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
 import io.github.bvilii.yapper.shared.model.message.Message;
-import io.github.bvilii.yapper.shared.model.message.MessageType;
 
-public class ChatService {
+public class MessageRouter {
     private final ServerSession session;
     private final ClientDisplay display;
     private final LoginService loginService;
     private final RegisterService registerService;
 
-    public ChatService(ServerSession session, ClientDisplay display, LoginService loginService, RegisterService registerService) {
+    public MessageRouter(ServerSession session, ClientDisplay display, LoginService loginService, RegisterService registerService) {
         this.session = session;
         this.display = display;
         this.loginService = loginService;
@@ -28,7 +27,8 @@ public class ChatService {
     public void onMessageFromServer(Message message) {
         switch (message.getType()) {
             case CHAT: {
-                display.displayChatMessage(message.getSender(), message.getContent());
+                ChatMessage chat = (ChatMessage) message;
+                display.displayChatMessage(chat.getSender(), chat.getContent());
                 break;
             }
             case LOGIN_ERROR: {

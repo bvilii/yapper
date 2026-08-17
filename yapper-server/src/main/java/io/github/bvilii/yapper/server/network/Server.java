@@ -36,7 +36,7 @@ public class Server {
 
         while (!serverSocket.isClosed()) {
             try {
-                Socket  clientSocket = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept();
 
                 ClientConnection connection = ClientConnection.open(clientSocket);
                 ClientSession session = new ClientSession(connection);

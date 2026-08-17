@@ -1,16 +1,16 @@
 package io.github.bvilii.yapper.client.network;
 
 
-import io.github.bvilii.yapper.client.service.ChatService;
+import io.github.bvilii.yapper.client.service.MessageRouter;
 import io.github.bvilii.yapper.shared.model.message.Message;
 
 import java.io.IOException;
 
 public class ServerHandler implements Runnable {
     private final ServerSession session;
-    private final ChatService service;
+    private final MessageRouter service;
 
-    public ServerHandler(ServerSession session, ChatService service) {
+    public ServerHandler(ServerSession session, MessageRouter service) {
         this.session = session;
         this.service = service;
     }
