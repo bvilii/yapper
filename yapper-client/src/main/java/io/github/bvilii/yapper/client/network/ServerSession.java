@@ -1,7 +1,7 @@
 package io.github.bvilii.yapper.client.network;
 
 import com.google.gson.Gson;
-import io.github.bvilii.yapper.shared.model.Message;
+import io.github.bvilii.yapper.shared.model.message.Message;
 
 import java.io.IOException;
 

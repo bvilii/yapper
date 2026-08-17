@@ -1,8 +1,8 @@
 package io.github.bvilii.yapper.client.service;
 
 import io.github.bvilii.yapper.client.network.ServerSession;
-import io.github.bvilii.yapper.shared.model.Message;
-import io.github.bvilii.yapper.shared.model.MessageType;
+import io.github.bvilii.yapper.shared.model.message.Message;
+import io.github.bvilii.yapper.shared.model.message.MessageType;
 
 import java.util.concurrent.CompletableFuture;
 

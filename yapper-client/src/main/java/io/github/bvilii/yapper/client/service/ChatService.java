@@ -2,8 +2,8 @@ package io.github.bvilii.yapper.client.service;
 
 import io.github.bvilii.yapper.client.network.ServerSession;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
-import io.github.bvilii.yapper.shared.model.Message;
-import io.github.bvilii.yapper.shared.model.MessageType;
+import io.github.bvilii.yapper.shared.model.message.Message;
+import io.github.bvilii.yapper.shared.model.message.MessageType;
 
 public class ChatService {
     private final ServerSession session;

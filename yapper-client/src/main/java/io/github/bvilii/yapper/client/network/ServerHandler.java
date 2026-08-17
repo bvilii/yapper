@@ -2,7 +2,7 @@ package io.github.bvilii.yapper.client.network;
 
 
 import io.github.bvilii.yapper.client.service.ChatService;
-import io.github.bvilii.yapper.shared.model.Message;
+import io.github.bvilii.yapper.shared.model.message.Message;
 
 import java.io.IOException;
 

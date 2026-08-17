@@ -1,4 +1,4 @@
-package io.github.bvilii.yapper.shared.model;
+package io.github.bvilii.yapper.shared.model.message;
 
 public enum MessageType {
     REGISTER,

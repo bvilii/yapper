@@ -3,7 +3,7 @@ package io.github.bvilii.yapper.server.network;
 
 import io.github.bvilii.yapper.server.service.MessageListener;
 import io.github.bvilii.yapper.server.ui.ClientLifecycleListener;
-import io.github.bvilii.yapper.shared.model.Message;
+import io.github.bvilii.yapper.shared.model.message.Message;
 
 import java.io.IOException;
 
