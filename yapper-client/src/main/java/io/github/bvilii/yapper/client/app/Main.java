@@ -36,31 +36,66 @@ public class Main {
         Thread serverThread = new Thread(handler);
         serverThread.start();
 
-
-        System.out.println("WELCOME TO YAPPER");
-
         Scanner scanner = new Scanner(System.in);
-        boolean success;
+
+
+        System.out.println("=========================");
+        System.out.println("    WELCOME TO YAPPER    ");
+        System.out.println("=========================");
+        System.out.println();
+
+        boolean auth_success = false;
+
         do {
-            System.out.println("PLEASE ENTER A USERNAME:");
-            String username = scanner.nextLine();
-            try {
-                success = loginService.attemptLogin(username).get();
-                if (!success) {
-                    System.out.println("USERNAME ALREADY TAKEN! TRY AGAIN!");
-                }else{
-                    System.out.println("LOGIN SUCCESSFUL!");
+
+            System.out.println("1. Login");
+            System.out.println("2. Register");
+            System.out.print("Select an option (1-2): ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1": {
+
+                    System.out.println("Please enter your username: ");
+                    String username = scanner.nextLine().trim();
+
+                    System.out.println("Please enter your password: ");
+                    String password = scanner.nextLine();
+
+                    try {
+                        auth_success = loginService.attemptLogin(username, password).get();
+
+                        if (auth_success) {
+                            System.out.println("You have successfully logged in!");
+                        } else {
+                            System.out.println("Incorrect username or password!");
+                        }
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        System.out.println("Error while attempting to login. Error message: " + e.getMessage());
+                        return;
+                    }
+
+                    break;
                 }
 
-            } catch (InterruptedException | ExecutionException e) {
-                System.out.println("Error while attempting to login. Error message: " + e.getMessage());
-                return;
-            }
+                case "2": {
 
-        } while (!success);
+                    break;
+                }
+
+                default: {
+                    System.out.println("Invalid Option! Please try again!");
+                    break;
+                }
+            }
+        } while (!auth_success);
 
 
         UserInputLoop inputLoop = new UserInputLoop(scanner, service);
         inputLoop.start();
+
+
     }
 }

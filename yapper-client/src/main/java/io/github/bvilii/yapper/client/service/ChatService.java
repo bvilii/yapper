@@ -2,6 +2,8 @@ package io.github.bvilii.yapper.client.service;
 
 import io.github.bvilii.yapper.client.network.ServerSession;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
+import io.github.bvilii.yapper.shared.model.message.ChatMessage;
+import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
 import io.github.bvilii.yapper.shared.model.message.Message;
 import io.github.bvilii.yapper.shared.model.message.MessageType;
 
@@ -17,10 +19,9 @@ public class ChatService {
     }
 
     public void onUserInput(String content) {
-        Message message = new Message(content, session.getUsername(), MessageType.CHAT);
-
+        Message message = new ChatMessage(session.getUsername(), content);
         session.sendMessage(message);
-    }
+    }x
 
     public void onMessageFromServer(Message message) {
         switch (message.getType()) {
@@ -33,7 +34,8 @@ public class ChatService {
                 break;
             }
             case LOGIN_SUCCESS: {
-                loginService.onLoginSuccess(message.getContent());
+                LoginResponseMessage response = (LoginResponseMessage) message;
+                loginService.onLoginSuccess(response.getMessage());
                 break;
             }
         }

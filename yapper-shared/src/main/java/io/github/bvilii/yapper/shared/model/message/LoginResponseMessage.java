@@ -9,4 +9,8 @@ public class LoginResponseMessage extends Message {
         super(type);
         this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }
