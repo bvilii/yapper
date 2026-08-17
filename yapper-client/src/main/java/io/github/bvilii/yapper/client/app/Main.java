@@ -6,6 +6,7 @@ import io.github.bvilii.yapper.client.network.ServerHandler;
 import io.github.bvilii.yapper.client.network.ServerSession;
 import io.github.bvilii.yapper.client.service.ChatService;
 import io.github.bvilii.yapper.client.service.LoginService;
+import io.github.bvilii.yapper.client.service.RegisterService;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
 import io.github.bvilii.yapper.client.ui.UserInputLoop;
 
@@ -30,7 +31,8 @@ public class Main {
         ServerSession session = new ServerSession(connection);
 
         LoginService loginService = new LoginService(session);
-        ChatService service = new ChatService(session, display, loginService);
+        RegisterService registerService = new RegisterService(session);
+        ChatService service = new ChatService(session, display, loginService, registerService);
 
         ServerHandler handler = new ServerHandler(session, service);
         Thread serverThread = new Thread(handler);
@@ -81,7 +83,25 @@ public class Main {
                 }
 
                 case "2": {
+                    System.out.println("Please enter a username: ");
+                    String username = scanner.nextLine().trim();
 
+                    System.out.println("Please enter a password: ");
+                    String password = scanner.nextLine();
+
+                    try {
+                        auth_success = registerService.attemptRegister(username, password).get();
+
+                        if (auth_success) {
+                            System.out.println("You have successfully registered!");
+                        } else {
+                            System.out.println("Username is already taken!");
+                        }
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        System.out.println("Error while attempting to register. Error message: " + e.getMessage());
+                        return;
+                    }
                     break;
                 }
 

@@ -1,0 +1,33 @@
+package io.github.bvilii.yapper.client.service;
+
+import io.github.bvilii.yapper.client.network.ServerSession;
+import io.github.bvilii.yapper.shared.model.message.RegisterRequestMessage;
+
+import java.util.concurrent.CompletableFuture;
+
+public class RegisterService {
+    private final ServerSession session;
+    CompletableFuture<Boolean> registerResult;
+    private String username;
+
+    public RegisterService(ServerSession session) {
+        this.session = session;
+    }
+
+
+    public CompletableFuture<Boolean> attemptRegister(String username, String password) {
+        registerResult = new CompletableFuture<>();
+        session.sendMessage(new RegisterRequestMessage(username, password));
+        this.username = username;
+        return registerResult;
+    }
+
+    public void onRegisterError(){
+        registerResult.complete(false);
+    }
+
+    public void onRegisterSuccess(){
+        registerResult.complete(true);
+        session.setUsername(username);
+    }
+}

@@ -11,17 +11,19 @@ public class ChatService {
     private final ServerSession session;
     private final ClientDisplay display;
     private final LoginService loginService;
+    private final RegisterService registerService;
 
-    public ChatService(ServerSession session, ClientDisplay display, LoginService loginService) {
+    public ChatService(ServerSession session, ClientDisplay display, LoginService loginService, RegisterService registerService) {
         this.session = session;
         this.display = display;
         this.loginService = loginService;
+        this.registerService = registerService;
     }
 
     public void onUserInput(String content) {
         Message message = new ChatMessage(session.getUsername(), content);
         session.sendMessage(message);
-    }x
+    }
 
     public void onMessageFromServer(Message message) {
         switch (message.getType()) {
@@ -36,6 +38,14 @@ public class ChatService {
             case LOGIN_SUCCESS: {
                 LoginResponseMessage response = (LoginResponseMessage) message;
                 loginService.onLoginSuccess(response.getMessage());
+                break;
+            }
+            case REGISTER_ERROR: {
+                registerService.onRegisterError();
+                break;
+            }
+            case REGISTER_SUCCESS: {
+                registerService.onRegisterSuccess();
                 break;
             }
         }
