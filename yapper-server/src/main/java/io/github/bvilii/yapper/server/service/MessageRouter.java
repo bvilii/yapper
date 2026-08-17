@@ -3,12 +3,12 @@ package io.github.bvilii.yapper.server.service;
 import io.github.bvilii.yapper.server.network.ClientSession;
 import io.github.bvilii.yapper.shared.model.Message;
 
-public class ChatService implements MessageListener {
+public class MessageRouter implements MessageListener {
     private final ClientRegistry registry;
     private final LoginService loginService;
     private final BroadcastService broadcastService;
 
-    public ChatService(ClientRegistry registry, LoginService loginService, BroadcastService broadcastService) {
+    public MessageRouter(ClientRegistry registry, LoginService loginService, BroadcastService broadcastService) {
         this.registry = registry;
         this.loginService = loginService;
         this.broadcastService = broadcastService;

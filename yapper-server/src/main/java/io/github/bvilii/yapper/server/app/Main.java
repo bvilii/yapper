@@ -2,7 +2,7 @@ package io.github.bvilii.yapper.server.app;
 
 import io.github.bvilii.yapper.server.network.Server;
 import io.github.bvilii.yapper.server.service.BroadcastService;
-import io.github.bvilii.yapper.server.service.ChatService;
+import io.github.bvilii.yapper.server.service.MessageRouter;
 import io.github.bvilii.yapper.server.service.ClientRegistry;
 import io.github.bvilii.yapper.server.service.LoginService;
 import io.github.bvilii.yapper.server.ui.ClientLifecycleListener;
@@ -17,7 +17,7 @@ public class Main {
         ClientRegistry registry = new ClientRegistry();
         BroadcastService broadcastService = new BroadcastService(registry);
         LoginService loginService = new LoginService(registry);
-        MessageListener messageListener = new ChatService(registry, loginService, broadcastService);
+        MessageListener messageListener = new MessageRouter(registry, loginService, broadcastService);
 
         ServerListener serverListener = new ServerUI();
         ClientLifecycleListener clientLifecycleListener = new ServerUI();
