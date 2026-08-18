@@ -10,14 +10,15 @@ public class UserRepository {
         this.jdbi = jdbi;
     }
 
-    public boolean saveUser(String username, String password_hash) {
-        int rows = jdbi.withHandle(handle ->
+    public long saveUser(String username, String password_hash) {
+        return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO users (username, password_hash) VALUES (:u, :p_hash)")
                         .bind("u", username)
                         .bind("p_hash", password_hash)
-                        .execute()
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Long.class)
+                        .one()
         );
-        return rows > 0;
     }
 
     public boolean existsByUsername(String username) {

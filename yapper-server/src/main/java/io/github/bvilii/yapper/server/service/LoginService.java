@@ -1,6 +1,7 @@
 package io.github.bvilii.yapper.server.service;
 
 import io.github.bvilii.yapper.server.network.ClientSession;
+import io.github.bvilii.yapper.server.repository.SessionRepository;
 import io.github.bvilii.yapper.server.repository.UserRepository;
 import io.github.bvilii.yapper.shared.model.message.LoginRequestMessage;
 import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class LoginService {
     private final ClientRegistry registry;
     private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
 
-    public LoginService(ClientRegistry registry, UserRepository userRepository) {
+    public LoginService(ClientRegistry registry, UserRepository userRepository, SessionRepository sessionRepository) {
         this.registry = registry;
         this.userRepository = userRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     public void handleLogin(ClientSession session, LoginRequestMessage message) {
