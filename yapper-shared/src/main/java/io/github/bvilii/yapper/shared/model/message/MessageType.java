@@ -13,5 +13,7 @@ public enum MessageType {
     AUTO_LOGIN_SUCCESS,
     AUTO_LOGIN_ERROR,
 
-    CHAT
+    CHAT,
+
+    TOKEN_LOGIN
 }

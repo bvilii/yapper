@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = RegisterRequestMessage.class, name = "REGISTER"),
         @JsonSubTypes.Type(value = RegisterResponseMessage.class, name = "REGISTER_SUCCESS"),
         @JsonSubTypes.Type(value = RegisterResponseMessage.class, name = "REGISTER_ERROR"),
-        @JsonSubTypes.Type(value = ChatMessage.class, name = "CHAT")
+        @JsonSubTypes.Type(value = ChatMessage.class, name = "CHAT"),
+        @JsonSubTypes.Type(value = TokenLoginRequestMessage.class, name = "TOKEN_LOGIN")
 })
 public abstract class Message {
     private MessageType type;
