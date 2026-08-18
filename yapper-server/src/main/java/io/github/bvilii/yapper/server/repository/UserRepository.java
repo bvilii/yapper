@@ -40,4 +40,13 @@ public class UserRepository {
         );
     }
 
+    public Optional<Long> findIdByUsername(String username) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT id FROM users WHERE username = :u")
+                .bind("u", username)
+                .mapTo(Long.class)
+                .findFirst()
+        );
+    }
+
 }

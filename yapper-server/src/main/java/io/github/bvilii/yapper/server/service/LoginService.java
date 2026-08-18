@@ -8,7 +8,10 @@ import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
 import io.github.bvilii.yapper.shared.model.message.MessageType;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 public class LoginService {
     private final ClientRegistry registry;
@@ -28,17 +31,24 @@ public class LoginService {
 
         Optional<String> storedHashedPassword = userRepository.findPasswordHashByUsername(username);
         if (!(storedHashedPassword.isPresent() && BCrypt.checkpw(password, storedHashedPassword.get()))) {
-            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "Invalid username or password"));
+            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "Invalid username or password", null));
             return;
         }
 
         if(registry.isUserOnline(username)){
-            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "User is already online!"));
+            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "User is already online!", null));
             return;
         }
 
         session.setUsername(username);
         registry.addSession(username, session);
-        session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_SUCCESS, "Login successful!"));
+
+        String sessionToken = UUID.randomUUID().toString();
+        Optional<Long> id = userRepository.findIdByUsername(username);
+        long userId = id.orElseThrow();
+        Instant expiresAt = Instant.now().plus(Duration.ofDays(30));
+
+        sessionRepository.saveSession(sessionToken, userId, expiresAt);
+        session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_SUCCESS, "Login successful!", sessionToken));
     }
 }
