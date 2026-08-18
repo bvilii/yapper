@@ -5,6 +5,9 @@ import io.github.bvilii.yapper.server.repository.UserRepository;
 import io.github.bvilii.yapper.shared.model.message.LoginRequestMessage;
 import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
 import io.github.bvilii.yapper.shared.model.message.MessageType;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.Optional;
 
 public class LoginService {
     private final ClientRegistry registry;
@@ -19,8 +22,10 @@ public class LoginService {
         String username = message.getUsername();
         String password = message.getPassword();
 
-        if(!userRepository.verifyPassword(username, password)){
-            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "Invalid username or password!"));
+
+        Optional<String> storedHashedPassword = userRepository.findPasswordHashByUsername(username);
+        if (!(storedHashedPassword.isPresent() && BCrypt.checkpw(password, storedHashedPassword.get()))) {
+            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "Invalid username or password"));
             return;
         }
 
