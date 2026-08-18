@@ -37,7 +37,7 @@ public class MessageRouter {
             }
             case LOGIN_SUCCESS: {
                 LoginResponseMessage response = (LoginResponseMessage) message;
-                loginService.onLoginSuccess(response.getMessage());
+                loginService.onLoginSuccess();
                 break;
             }
             case REGISTER_ERROR: {

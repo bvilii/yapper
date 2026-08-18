@@ -25,7 +25,9 @@ public class Main {
         BroadcastService broadcastService = new BroadcastService(registry);
         LoginService loginService = new LoginService(registry, userRepository, sessionRepository);
         RegisterService registerService = new RegisterService(userRepository, registry, sessionRepository);
-        MessageListener messageListener = new MessageRouter(registry, loginService, broadcastService, registerService);
+        TokenLoginService tokenLoginService = new TokenLoginService(registry, sessionRepository);
+
+        MessageListener messageListener = new MessageRouter(registry, loginService, broadcastService, registerService, tokenLoginService);
 
         ServerListener serverListener = new ServerUI();
         ClientLifecycleListener clientLifecycleListener = new ServerUI();

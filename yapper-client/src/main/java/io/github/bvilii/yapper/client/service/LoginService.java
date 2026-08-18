@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 public class LoginService {
     private final ServerSession session;
     private CompletableFuture<Boolean> loginResult;
+    private String username;
 
     public LoginService(ServerSession session) {
         this.session = session;
@@ -18,6 +19,7 @@ public class LoginService {
     public CompletableFuture<Boolean> attemptLogin(String username, String password) {
         loginResult = new  CompletableFuture<>();
         session.sendMessage(new LoginRequestMessage(username, password));
+        this.username = username;
         return loginResult;
     }
 
@@ -25,7 +27,7 @@ public class LoginService {
         loginResult.complete(false);
     }
 
-    public void onLoginSuccess(String username) {
+    public void onLoginSuccess() {
         session.setUsername(username);
         loginResult.complete(true);
     }
