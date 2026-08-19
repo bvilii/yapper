@@ -1,5 +1,6 @@
 package io.github.bvilii.yapper.shared.model.message;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -17,7 +18,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = RegisterResponseMessage.class, name = "REGISTER_SUCCESS"),
         @JsonSubTypes.Type(value = RegisterResponseMessage.class, name = "REGISTER_ERROR"),
         @JsonSubTypes.Type(value = ChatMessage.class, name = "CHAT"),
-        @JsonSubTypes.Type(value = TokenLoginRequestMessage.class, name = "TOKEN_LOGIN")
+        @JsonSubTypes.Type(value = TokenLoginRequestMessage.class, name = "TOKEN_LOGIN"),
+        @JsonSubTypes.Type(value = TokenLoginResponseMessage.class, name = "TOKEN_LOGIN_SUCCESS"),
+        @JsonSubTypes.Type(value = TokenLoginResponseMessage.class, name = "TOKEN_LOGIN_ERROR")
 })
 public abstract class Message {
     private MessageType type;

@@ -2,21 +2,21 @@ package io.github.bvilii.yapper.client.service;
 
 import io.github.bvilii.yapper.client.network.ServerSession;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
-import io.github.bvilii.yapper.shared.model.message.ChatMessage;
-import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
-import io.github.bvilii.yapper.shared.model.message.Message;
+import io.github.bvilii.yapper.shared.model.message.*;
 
 public class MessageRouter {
     private final ServerSession session;
     private final ClientDisplay display;
     private final LoginService loginService;
     private final RegisterService registerService;
+    private final TokenLoginService tokenLoginService;
 
-    public MessageRouter(ServerSession session, ClientDisplay display, LoginService loginService, RegisterService registerService) {
+    public MessageRouter(ServerSession session, ClientDisplay display, LoginService loginService, RegisterService registerService, TokenLoginService tokenLoginService) {
         this.session = session;
         this.display = display;
         this.loginService = loginService;
         this.registerService = registerService;
+        this.tokenLoginService = tokenLoginService;
     }
 
     public void onUserInput(String content) {
@@ -37,7 +37,7 @@ public class MessageRouter {
             }
             case LOGIN_SUCCESS: {
                 LoginResponseMessage response = (LoginResponseMessage) message;
-                loginService.onLoginSuccess();
+                loginService.onLoginSuccess(response);
                 break;
             }
             case REGISTER_ERROR: {
@@ -45,7 +45,21 @@ public class MessageRouter {
                 break;
             }
             case REGISTER_SUCCESS: {
-                registerService.onRegisterSuccess();
+                RegisterResponseMessage response = (RegisterResponseMessage) message;
+                registerService.onRegisterSuccess(response);
+                break;
+            }
+            case TOKEN_LOGIN_SUCCESS: {
+                TokenLoginResponseMessage response = (TokenLoginResponseMessage) message;
+                tokenLoginService.onTokenLoginSuccess(response);
+                break;
+            }
+            case TOKEN_LOGIN_ERROR: {
+                tokenLoginService.onTokenLoginError();
+                break;
+            }
+
+            default : {
                 break;
             }
         }

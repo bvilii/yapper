@@ -11,4 +11,8 @@ public class RegisterResponseMessage extends Message{
         this.message = message;
         this.token = token;
     }
+
+    public String getToken() {
+        return token;
+    }
 }

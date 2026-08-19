@@ -15,4 +15,8 @@ public class LoginResponseMessage extends Message {
     public String getMessage() {
         return message;
     }
+
+    public String getToken() {
+        return token;
+    }
 }

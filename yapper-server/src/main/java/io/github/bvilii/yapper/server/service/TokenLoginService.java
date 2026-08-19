@@ -5,6 +5,7 @@ import io.github.bvilii.yapper.server.repository.SessionRepository;
 import io.github.bvilii.yapper.shared.model.message.LoginResponseMessage;
 import io.github.bvilii.yapper.shared.model.message.MessageType;
 import io.github.bvilii.yapper.shared.model.message.TokenLoginRequestMessage;
+import io.github.bvilii.yapper.shared.model.message.TokenLoginResponseMessage;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -25,14 +26,14 @@ public class TokenLoginService {
         Optional<String> usernameOpt = sessionRepository.findUsernameByToken(token);
 
         if (usernameOpt.isEmpty()) {
-            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "Session expired or doesnt exit!", null));
+            session.sendMessage(new TokenLoginResponseMessage(MessageType.TOKEN_LOGIN_ERROR, null));
             return;
         }
 
         String username = usernameOpt.get();
 
         if(registry.isUserOnline(username)) {
-            session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_ERROR, "User is already online", null));
+            session.sendMessage(new TokenLoginResponseMessage(MessageType.TOKEN_LOGIN_ERROR, null));
             return;
         }
 
@@ -41,6 +42,6 @@ public class TokenLoginService {
 
         sessionRepository.refreshSession(token, Instant.now().plus(Duration.ofDays(30)));
 
-        session.sendMessage(new LoginResponseMessage(MessageType.LOGIN_SUCCESS, "Session logged in", token));
+        session.sendMessage(new TokenLoginResponseMessage(MessageType.TOKEN_LOGIN_SUCCESS, username));
     }
 }

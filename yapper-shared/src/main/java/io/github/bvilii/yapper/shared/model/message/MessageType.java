@@ -15,5 +15,7 @@ public enum MessageType {
 
     CHAT,
 
-    TOKEN_LOGIN
+    TOKEN_LOGIN,
+    TOKEN_LOGIN_SUCCESS,
+    TOKEN_LOGIN_ERROR
 }

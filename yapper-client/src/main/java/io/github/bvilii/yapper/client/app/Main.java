@@ -7,11 +7,14 @@ import io.github.bvilii.yapper.client.network.ServerSession;
 import io.github.bvilii.yapper.client.service.MessageRouter;
 import io.github.bvilii.yapper.client.service.LoginService;
 import io.github.bvilii.yapper.client.service.RegisterService;
+import io.github.bvilii.yapper.client.service.TokenLoginService;
+import io.github.bvilii.yapper.client.storage.TokenStorage;
 import io.github.bvilii.yapper.client.ui.ClientDisplay;
 import io.github.bvilii.yapper.client.ui.UserInputLoop;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
@@ -28,11 +31,15 @@ public class Main {
             return;
         }
 
+        TokenStorage tokenStorage = new TokenStorage();
+
         ServerSession session = new ServerSession(connection);
 
-        LoginService loginService = new LoginService(session);
-        RegisterService registerService = new RegisterService(session);
-        MessageRouter service = new MessageRouter(session, display, loginService, registerService);
+        TokenLoginService tokenLoginService = new TokenLoginService(session, tokenStorage);
+        LoginService loginService = new LoginService(session, tokenStorage);
+        RegisterService registerService = new RegisterService(session, tokenStorage);
+
+        MessageRouter service = new MessageRouter(session, display, loginService, registerService, tokenLoginService);
 
         ServerHandler handler = new ServerHandler(session, service);
         Thread serverThread = new Thread(handler);
@@ -48,7 +55,20 @@ public class Main {
 
         boolean auth_success = false;
 
-        do {
+        String token = tokenStorage.getToken();
+        if(token != null) {
+            try {
+                auth_success = tokenLoginService.attemptTokenLogin(token).get();
+
+            } catch (InterruptedException | ExecutionException e) {
+                System.out.println("Error while attempting to token login. Error message: " + e.getMessage());
+                return;
+            }
+        }
+
+
+
+        while (!auth_success) {
 
             System.out.println("1. Login");
             System.out.println("2. Register");
@@ -110,7 +130,7 @@ public class Main {
                     break;
                 }
             }
-        } while (!auth_success);
+        }
 
 
         UserInputLoop inputLoop = new UserInputLoop(scanner, service);
