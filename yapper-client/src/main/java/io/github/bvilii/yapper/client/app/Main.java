@@ -24,7 +24,7 @@ public class Main {
 
         ServerConnection connection;
         try {
-            connection = ServerConnection.connect("158.180.21.246", 5000);
+            connection = ServerConnection.connect("bvilii-yapper.duckdns.org", 5000);
 
         } catch (IOException e) {
             System.out.println("Could not connect to server");
